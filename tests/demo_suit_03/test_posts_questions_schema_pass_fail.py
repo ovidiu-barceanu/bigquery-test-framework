@@ -1,7 +1,8 @@
 from src.bigquery_client import get_client
 from src.query_runner import load_query
+import pytest
 
-
+@pytest.mark.regression
 def test_posts_questions_schema():
     client = get_client()
 

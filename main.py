@@ -2,7 +2,7 @@ from google.cloud import bigquery
 
 def run_query():
     client = bigquery.Client()
-
+    print("1")
     query = """
     SELECT
         title,
@@ -13,13 +13,13 @@ def run_query():
     ORDER BY view_count DESC
     LIMIT 5
     """
-
+    print("2")
     results = client.query(query)
 
     for row in results:
         print(f"Title: {row.title}")
         print(f"Score: {row.score}, Views: {row.view_count}")
         print("-" * 50)
-
+    print("3")
 if __name__ == "__main__":
     run_query()

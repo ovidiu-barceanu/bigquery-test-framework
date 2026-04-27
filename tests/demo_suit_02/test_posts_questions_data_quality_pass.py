@@ -1,7 +1,9 @@
 from src.bigquery_client import get_client
 from src.query_runner import load_query
+import pytest
 
-
+@pytest.mark.smoke
+@pytest.mark.regression
 def test_posts_questions_data_quality():
     client = get_client()
 
