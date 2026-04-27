@@ -1,0 +1,385 @@
+BigQuery Test Automation Framework (Python + Pytest + Allure + Git)
+Purpose
+
+This Confluence page documents the full setup of a scalable BigQuery QA automation framework using:
+
+Python
+Virtual Environment (venv)
+Google Cloud CLI
+BigQuery Python Client
+Pytest
+Allure Reporting
+Git Version Control
+
+Framework goals:
+
+SQL-based validations
+0 rows = PASS model
+Schema testing
+Data quality testing
+Reporting
+Scalable design
+Source control ready
+STEP 1 — Machine Setup
+1.1 Install Python
+
+Download from:
+
+https://www.python.org/downloads/macos/
+
+Verify:
+
+python3 --version
+pip3 --version
+which python3
+which pip3
+
+Expected:
+
+Python 3.x
+/usr/local/bin/python3
+1.2 Install Google Cloud CLI
+
+Using Homebrew:
+
+brew update
+brew install --cask gcloud-cli
+
+Verify:
+
+gcloud --version
+which gcloud
+1.3 Initialize Google Cloud
+gcloud init
+
+Actions:
+
+login with Google account
+choose project
+configure default profile
+1.4 Setup credentials for Python
+gcloud auth application-default login
+
+This creates local ADC credentials for Python BigQuery client.
+
+Common Errors
+command not found: gcloud
+
+Fix:
+
+brew install --cask gcloud-cli
+Authentication issues
+
+Fix:
+
+gcloud auth application-default login
+Step 1 Summary
+Achieved
+Python installed
+pip available
+Google Cloud CLI installed
+Google authentication configured
+Next Step
+
+Create project structure and virtual environment.
+
+Commands Used
+python3 --version
+pip3 --version
+brew install --cask gcloud-cli
+gcloud init
+gcloud auth application-default login
+STEP 2 — Project Setup + Virtual Environment
+2.1 Create project
+cd ~
+mkdir bigquery-test-framework
+cd bigquery-test-framework
+2.2 Create venv
+python3 -m venv .venv
+2.3 Activate venv
+source .venv/bin/activate
+
+Prompt becomes:
+
+(.venv)
+2.4 Verify venv
+which python
+which pip
+
+Expected:
+
+.../bigquery-test-framework/.venv/bin/python
+2.5 Upgrade pip
+pip install --upgrade pip
+2.6 Create folders
+mkdir -p src tests queries config
+touch main.py
+touch requirements.txt
+Common Errors
+.venv not visible
+
+Use:
+
+ls -la
+
+(hidden folder)
+
+New terminal does not show (.venv)
+
+Fix:
+
+source .venv/bin/activate
+Step 2 Summary
+Achieved
+Project created
+Isolated Python environment created
+Clean structure ready
+Next Step
+
+Install dependencies and run first BigQuery query.
+
+Commands Used
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+mkdir -p src tests queries config
+STEP 3 — Install Dependencies + First Query
+3.1 Install packages
+pip install google-cloud-bigquery
+pip install pytest
+3.2 Freeze packages
+pip freeze > requirements.txt
+3.3 main.py
+from google.cloud import bigquery
+
+def run_query():
+    client = bigquery.Client()
+
+    query = """
+    SELECT title, score, view_count
+    FROM `bigquery-public-data.stackoverflow.posts_questions`
+    LIMIT 5
+    """
+
+    results = client.query(query)
+
+    for row in results:
+        print(row.title, row.score, row.view_count)
+
+if __name__ == "__main__":
+    run_query()
+3.4 Run
+python main.py
+Common Errors
+ModuleNotFoundError
+pip install google-cloud-bigquery
+DefaultCredentialsError
+gcloud auth application-default login
+403 Access Denied
+gcloud config set project YOUR_PROJECT_ID
+Query hangs
+
+Usually auth/project issue.
+
+Check:
+
+gcloud config list
+gcloud auth list
+Step 3 Summary
+Achieved
+Python connected to BigQuery
+Public dataset queried successfully
+Next Step
+
+Convert scripts into real tests.
+
+Commands Used
+pip install google-cloud-bigquery
+pip install pytest
+pip freeze > requirements.txt
+python main.py
+STEP 4 — Pytest Framework Setup
+4.1 Fix imports
+touch src/__init__.py
+touch tests/__init__.py
+4.2 Create pytest.ini (root folder)
+[pytest]
+pythonpath = .
+Common Error
+No module named src
+
+Fix:
+
+add __init__.py
+add pytest.ini
+Step 4 Summary
+Achieved
+Python package imports fixed
+pytest ready
+Next Step
+
+Create SQL-driven tests.
+
+Commands Used
+touch src/__init__.py
+touch tests/__init__.py
+STEP 5 — SQL-Based Tests (0 rows = PASS)
+Example SQL Test
+
+queries/test_no_negative_views.sql
+
+SELECT id
+FROM `bigquery-public-data.stackoverflow.posts_questions`
+WHERE view_count < 0
+Python Test
+
+tests/test_no_negative_views.py
+
+from src.bigquery_client import get_client
+from src.query_runner import load_query
+
+def test_no_negative_views():
+    client = get_client()
+    query = load_query("queries/test_no_negative_views.sql")
+    results = list(client.query(query))
+    assert len(results) == 0
+Run Tests
+pytest
+Step 5 Summary
+Achieved
+SQL validations running through pytest
+0 rows = PASS model active
+Next Step
+
+Data quality and schema tests.
+
+Commands Used
+pytest
+STEP 6 — Schema + Data Quality Tests
+Examples
+
+Validate:
+
+null values
+duplicates
+negative values
+schema name
+schema type
+column order
+
+Use:
+
+INFORMATION_SCHEMA.COLUMNS
+Step 6 Summary
+Achieved
+Production-style validations possible
+Next Step
+
+Git + reporting
+
+STEP 7 — Git Version Control
+7.1 Initialize repo
+git init
+7.2 .gitignore
+__pycache__/
+*.pyc
+.venv/
+.idea/
+.vscode/
+.pytest_cache/
+allure-results/
+allure-report/
+.DS_Store
+7.3 First commit
+git add .
+git commit -m "Initial commit - BigQuery QA framework"
+7.4 Push
+git remote add origin <repo_url>
+git branch -M main
+git push -u origin main
+Ongoing Workflow
+New packages
+pip install <package>
+pip freeze > requirements.txt
+git add requirements.txt
+git commit -m "Update dependencies"
+git push
+New tests
+git add .
+git commit -m "Add new tests"
+git push
+Step 7 Summary
+Achieved
+Project versioned
+Shareable repo
+Team collaboration ready
+Next Step
+
+Reporting
+
+STEP 8 — Allure Reporting
+8.1 Install Python plugin
+pip install allure-pytest
+pip freeze > requirements.txt
+8.2 Install CLI (system level)
+brew install allure
+
+Note:
+This is global install, not part of venv.
+
+8.3 Generate report data
+pytest --alluredir=allure-results
+8.4 Open report
+allure serve allure-results
+Common Notes
+pip freeze needed after pip install allure-pytest
+pip freeze NOT needed after brew install allure
+Step 8 Summary
+Achieved
+Visual reports
+Better debugging
+Professional output
+Next Step
+
+Dynamic SQL runner.
+
+Commands Used
+pip install allure-pytest
+pip freeze > requirements.txt
+brew install allure
+pytest --alluredir=allure-results
+allure serve allure-results
+Current Project Structure
+bigquery-test-framework/
+│
+├── src/
+├── tests/
+├── queries/
+├── config/
+├── main.py
+├── requirements.txt
+├── pytest.ini
+├── .gitignore
+└── .venv/
+
+Generated:
+
+allure-results/
+allure-report/
+Best Practices
+Always activate venv
+Keep SQL logic in SQL
+Use test_name column in results
+Freeze requirements after pip installs
+Never commit .venv
+Use Git small commits
+Use Allure for demos/reporting
+NEXT STEP
+STEP 9 — Dynamic SQL Test Runner
+
+Goals:
+
+auto-detect .sql files
+no Python file per test
+scalable to 100+ tests
+automatic Allure reporting

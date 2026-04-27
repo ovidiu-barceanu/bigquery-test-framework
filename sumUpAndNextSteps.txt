@@ -1,0 +1,83 @@
+Already Done
+Core Setup
+Python installed
+Virtual environment (.venv) created
+Google Cloud CLI installed
+BigQuery authentication configured (gcloud auth application-default login)
+Project Structure
+src/ for framework code
+tests/ for pytest tests
+queries/ for SQL files
+requirements.txt
+pytest.ini
+Dependencies
+pytest
+Google Cloud BigQuery client
+Allure Report plugin installed
+Framework Features
+Run SQL validations through pytest
+0 rows = PASS logic
+Data quality tests
+Schema validation tests
+BigQuery connectivity confirmed
+Reporting
+Allure configured
+HTML reports can be generated
+Version Control
+Git initialized
+Repo pushed to GitHub
+.gitignore configured
+🔜 Still Needed / Next Steps
+High Priority
+Dynamic SQL Test Runner
+Auto-detect all .sql files in queries/
+Run without creating Python file per test
+One framework test runner for all SQL
+Better Allure Integration
+One report entry per SQL file
+Cleaner test names
+Add steps / attachments
+Attach failed rows / CSV output
+Medium Priority
+Config / Environments
+DEV / UAT switching
+Config file or CLI parameter
+Different datasets per environment
+Logging
+Execution logs
+Query runtime
+Errors captured cleanly
+Test Data / Utilities
+Shared helper functions
+Reusable query utilities
+Advanced / Nice to Have
+CI/CD
+Run in GitHub Actions
+Scheduled nightly runs
+Notifications
+Email / Teams / Slack failures
+Historical Reporting
+Trend of failures over time
+Packaging
+Cleaner install for others
+README + onboarding guide
+Recommended Immediate Order
+1.
+
+Dynamic SQL runner
+
+2.
+
+Environment switching (DEV/UAT)
+
+3.
+
+Advanced Allure attachments
+
+4.
+
+GitHub Actions CI
+
+5.
+
+Notifications
