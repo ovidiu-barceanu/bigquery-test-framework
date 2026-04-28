@@ -1,0 +1,7 @@
+dev:
+  project: bigquery-public-data.stackoverflow
+#  dataset: dataset
+
+prod:
+  project: env.prod
+#  dataset: dataset
